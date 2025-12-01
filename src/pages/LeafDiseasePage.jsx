@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API = "http://localhost:8000";
+const API = "https://weather-crop-advisory.onrender.com";
 
 const LeafDiseasePage = () => {
   const [file, setFile] = useState(null);

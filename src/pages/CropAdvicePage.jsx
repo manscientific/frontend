@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const API = "http://localhost:8000";
+const API = "https://weather-crop-advisory.onrender.com";
 
 const CropAdvicePage = () => {
   const { cropName } = useParams();
