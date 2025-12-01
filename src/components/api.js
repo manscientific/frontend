@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://weather-crop-advisory-1.onrender.com",
+  baseURL: "https://weather-crop-advisory-1.onrender.com/api",
 });
 
 // Add token to every request if present
