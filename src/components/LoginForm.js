@@ -152,9 +152,9 @@ const LoginForm = ({ onLoginSuccess, switchToRegister }) => {
           </button>
 
           {/* Divider */}
-          <div className={styles.divider}>
+          {/* <div className={styles.divider}>
             <span>or continue with</span>
-          </div>
+          </div> */}
 
           {/* Social Login (Optional) */}
           <div className={styles.socialButtons}>
