@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import API from "./api";
 import AdvisoryResult from "./AdvisoryResult";
 import styles from "./AdvisoryForm.module.css";
@@ -9,24 +9,18 @@ import {
   FaLeaf, 
   FaCalendarAlt, 
   FaMagic, 
-  FaSearch, 
-  FaCheckCircle,
-  FaExclamationTriangle,
   FaGlobeAmericas,
   FaChevronRight,
   FaSeedling,
-  FaCloudSun,
-  FaChartLine,
-  FaRobot,
-  FaTint,
-  FaSun,
-  FaSnowflake,
-  FaUmbrella,
-  FaCloudRain,
-  FaTree
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaLanguage,
+  FaAngleDown
 } from "react-icons/fa";
-import { GiWheat } from "react-icons/gi";
 import { RiLoader4Line } from "react-icons/ri";
+
+// Import translations
+import { translations, languages } from "./translations";
 
 const AdvisoryForm = ({ farmer }) => {
   const [location, setLocation] = useState(farmer?.location || "");
@@ -35,6 +29,24 @@ const AdvisoryForm = ({ farmer }) => {
   const [loading, setLoading] = useState(false);
   const [advisoryData, setAdvisoryData] = useState(null);
   const [error, setError] = useState("");
+  const [currentLang, setCurrentLang] = useState("en");
+  const [showLangDropdown, setShowLangDropdown] = useState(false);
+
+  const t = translations[currentLang];
+
+  useEffect(() => {
+    // Set language from localStorage or browser preference
+    const savedLang = localStorage.getItem('preferredLanguage');
+    if (savedLang && languages[savedLang]) {
+      setCurrentLang(savedLang);
+    }
+  }, []);
+
+  const handleLanguageChange = (langCode) => {
+    setCurrentLang(langCode);
+    localStorage.setItem('preferredLanguage', langCode);
+    setShowLangDropdown(false);
+  };
 
   const handleGetAdvisory = async (e) => {
     e.preventDefault();
@@ -45,6 +57,7 @@ const AdvisoryForm = ({ farmer }) => {
     try {
       const payload = {
         soilType,
+        language: currentLang
       };
 
       if (location) payload.location = location;
@@ -55,7 +68,7 @@ const AdvisoryForm = ({ farmer }) => {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-          "Failed to fetch advisory. Please check your location and try again."
+          t.errors.fetchAdvisory || "Failed to fetch advisory. Please check your location and try again."
       );
     } finally {
       setLoading(false);
@@ -66,74 +79,71 @@ const AdvisoryForm = ({ farmer }) => {
     { 
       type: "loam", 
       icon: <FaLeaf className={styles.soilIcon} />, 
-      label: "Loam", 
-      desc: "Rich & Balanced",
-      color: "var(--color-emerald)"
+      label: t.soilTypes.loam.label,
+      desc: t.soilTypes.loam.desc,
     },
     { 
       type: "clay", 
-      icon: <FaTint className={styles.soilIcon} />, 
-      label: "Clay", 
-      desc: "Moist & Heavy",
-      color: "var(--color-amber)"
+      icon: <div className={styles.soilIcon}>🟫</div>, 
+      label: t.soilTypes.clay.label,
+      desc: t.soilTypes.clay.desc,
     },
     { 
       type: "sandy", 
-      icon: <FaSun className={styles.soilIcon} />, 
-      label: "Sandy", 
-      desc: "Dry & Light",
-      color: "var(--color-gold)"
+      icon: <div className={styles.soilIcon}>🏖️</div>, 
+      label: t.soilTypes.sandy.label,
+      desc: t.soilTypes.sandy.desc,
     }
   ];
 
-  const months = [
-    { value: "", label: "Auto-select (Current Season)", icon: <FaCloudSun /> },
-    { value: "1", label: "January - Winter Crops", icon: <FaSnowflake /> },
-    { value: "2", label: "February - Early Spring", icon: <GiWheat /> },
-    { value: "3", label: "March - Spring Sowing", icon: <FaLeaf /> },
-    { value: "4", label: "April - Pre-Monsoon", icon: <FaUmbrella /> },
-    { value: "5", label: "May - Summer Crops", icon: <FaSun /> },
-    { value: "6", label: "June - Monsoon Start", icon: <FaCloudRain /> },
-    { value: "7", label: "July - Kharif Season", icon: <FaTree /> },
-    { value: "8", label: "August - Main Crop", icon: <GiWheat /> },
-    { value: "9", label: "September - Late Monsoon", icon: <FaLeaf /> },
-    { value: "10", label: "October - Rabi Prep", icon: <FaLeaf /> },
-    { value: "11", label: "November - Winter Prep", icon: <FaCloudSun /> },
-    { value: "12", label: "December - Cool Season", icon: <FaSnowflake /> }
-  ];
+  const months = t.months.map((month, index) => ({
+    value: index === 0 ? "" : index.toString(),
+    label: month,
+    icon: getMonthIcon(index)
+  }));
 
-  const features = [
-    {
-      icon: <FaGlobeAmericas />,
-      title: "Satellite Data",
-      desc: "Real-time NDVI & weather analysis"
-    },
-    {
-      icon: <FaRobot />,
-      title: "AI Predictions",
-      desc: "Machine learning crop recommendations"
-    },
-    {
-      icon: <FaChartLine />,
-      title: "Yield Optimization",
-      desc: "Maximize productivity with data insights"
-    },
-    {
-      icon: <FaMagic />,
-      title: "Climate Smart",
-      desc: "Adaptive to changing weather patterns"
-    }
-  ];
-
-  const tips = [
-    "Provide location for hyper-local weather insights",
-    "Select accurate soil type for better fertilizer recommendations",
-    "Set sowing month for seasonal crop planning",
-    "Consider crop rotation suggestions for soil health"
-  ];
+  function getMonthIcon(monthIndex) {
+    const icons = ["🌤️", "❄️", "🌼", "🌸", "🌦️", "🌞", "☔", "🌧️", "🌾", "🌻", "🍂", "🌥️", "🎄"];
+    return icons[monthIndex] || "📅";
+  }
 
   return (
     <div className={styles.container}>
+      {/* Language Selector */}
+      <div className={styles.languageSelector}>
+        <button 
+          className={styles.languageButton}
+          onClick={() => setShowLangDropdown(!showLangDropdown)}
+        >
+          <FaLanguage className={styles.langIcon} />
+          <span className={styles.langName}>{languages[currentLang]}</span>
+          <FaAngleDown className={styles.langArrow} />
+        </button>
+        
+        {showLangDropdown && (
+          <div className={styles.languageDropdown}>
+            {Object.entries(languages).map(([code, name]) => (
+              <button
+                key={code}
+                className={`${styles.langOption} ${currentLang === code ? styles.langOptionActive : ''}`}
+                onClick={() => handleLanguageChange(code)}
+              >
+                <span className={styles.langFlag}>{getFlagEmoji(code)}</span>
+                <span className={styles.langText}>{name}</span>
+                {currentLang === code && (
+                  <FaCheckCircle className={styles.langCheck} />
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Overlay for closing dropdown */}
+      {showLangDropdown && (
+        <div className={styles.dropdownOverlay} onClick={() => setShowLangDropdown(false)} />
+      )}
+
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerIconWrapper}>
@@ -142,12 +152,11 @@ const AdvisoryForm = ({ farmer }) => {
         </div>
         
         <h1 className={styles.title}>
-          <span className={styles.titleGradient}>AI Crop Advisory</span>
+          <span className={styles.titleGradient}>{t.title}</span>
         </h1>
         
         <p className={styles.subtitle}>
-          Get intelligent, data-driven recommendations powered by satellite imagery, 
-          weather forecasts, and agricultural research
+          {t.subtitle}
         </p>
       </div>
 
@@ -156,12 +165,12 @@ const AdvisoryForm = ({ farmer }) => {
         <div className={styles.mainCard}>
           <div className={styles.cardHeader}>
             <div>
-              <h2 className={styles.cardTitle}>Generate Advisory</h2>
-              <p className={styles.cardSubtitle}>Fill in your farm details below</p>
+              <h2 className={styles.cardTitle}>{t.formTitle}</h2>
+              <p className={styles.cardSubtitle}>{t.formSubtitle}</p>
             </div>
             <div className={styles.aiBadge}>
               <FaMagic className={styles.aiIcon} />
-              <span>AI-Powered</span>
+              <span>{t.aiBadge}</span>
             </div>
           </div>
 
@@ -171,9 +180,9 @@ const AdvisoryForm = ({ farmer }) => {
               <div className={styles.formLabelWrapper}>
                 <label className={styles.formLabel}>
                   <FaMapMarkerAlt className={styles.labelIcon} />
-                  Farm Location
+                  {t.location.label}
                 </label>
-                <span className={styles.optionalBadge}>Optional</span>
+                <span className={styles.optionalBadge}>{t.optional}</span>
               </div>
               
               <div className={styles.inputWrapper}>
@@ -182,15 +191,15 @@ const AdvisoryForm = ({ farmer }) => {
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  placeholder="Enter city, village, or coordinates..."
+                  placeholder={t.location.placeholder}
                   className={styles.input}
                 />
               </div>
               
               <p className={styles.inputHint}>
-                Currently using:{" "}
+                {t.location.hint}:{" "}
                 <span className={styles.highlight}>
-                  {farmer?.location || "Auto-detect Location"}
+                  {farmer?.location || t.location.autoDetect}
                 </span>
               </p>
             </div>
@@ -198,8 +207,8 @@ const AdvisoryForm = ({ farmer }) => {
             {/* Soil Type Selection */}
             <div className={styles.formGroup}>
               <label className={styles.formLabel}>
-                <FaTint className={styles.labelIcon} />
-                Soil Type
+                <div className={styles.labelIcon}>🌍</div>
+                {t.soil.label}
               </label>
               
               <div className={styles.soilOptions}>
@@ -232,7 +241,7 @@ const AdvisoryForm = ({ farmer }) => {
               </div>
               
               <p className={styles.inputHint}>
-                Select the dominant soil type in your farming field
+                {t.soil.hint}
               </p>
             </div>
 
@@ -241,9 +250,9 @@ const AdvisoryForm = ({ farmer }) => {
               <div className={styles.formLabelWrapper}>
                 <label className={styles.formLabel}>
                   <FaCalendarAlt className={styles.labelIcon} />
-                  Sowing Season
+                  {t.sowing.label}
                 </label>
-                <span className={styles.recommendedBadge}>Recommended</span>
+                <span className={styles.recommendedBadge}>{t.recommended}</span>
               </div>
               
               <div className={styles.selectWrapper}>
@@ -263,7 +272,7 @@ const AdvisoryForm = ({ farmer }) => {
               </div>
               
               <p className={styles.inputHint}>
-                Select your planned sowing month for season-specific recommendations
+                {t.sowing.hint}
               </p>
             </div>
 
@@ -276,12 +285,12 @@ const AdvisoryForm = ({ farmer }) => {
               {loading ? (
                 <>
                   <RiLoader4Line className={styles.spinner} />
-                  <span>Analyzing Soil & Weather Data...</span>
+                  <span>{t.buttons.loading}</span>
                 </>
               ) : (
                 <>
                   <FaMagic className={styles.buttonIcon} />
-                  <span>Generate Smart Advisory</span>
+                  <span>{t.buttons.generate}</span>
                   <FaChevronRight className={styles.buttonArrow} />
                 </>
               )}
@@ -301,10 +310,10 @@ const AdvisoryForm = ({ farmer }) => {
         <div className={styles.sidePanel}>
           {/* Features Card */}
           <div className={styles.featuresCard}>
-            <h3 className={styles.sidePanelTitle}>Why Use Our Advisory?</h3>
+            <h3 className={styles.sidePanelTitle}>{t.features.title}</h3>
             
             <div className={styles.featuresList}>
-              {features.map((feature, index) => (
+              {t.features.items.map((feature, index) => (
                 <div key={index} className={styles.featureItem}>
                   <div className={styles.featureIcon}>{feature.icon}</div>
                   <div>
@@ -318,10 +327,10 @@ const AdvisoryForm = ({ farmer }) => {
 
           {/* Tips Card */}
           <div className={styles.tipsCard}>
-            <h3 className={styles.sidePanelTitle}>Pro Tips</h3>
+            <h3 className={styles.sidePanelTitle}>{t.tips.title}</h3>
             
             <div className={styles.tipsList}>
-              {tips.map((tip, index) => (
+              {t.tips.items.map((tip, index) => (
                 <div key={index} className={styles.tipItem}>
                   <div className={styles.tipNumber}>{index + 1}</div>
                   <span className={styles.tipText}>{tip}</span>
@@ -332,25 +341,15 @@ const AdvisoryForm = ({ farmer }) => {
 
           {/* Stats Preview */}
           <div className={styles.statsCard}>
-            <h3 className={styles.statsTitle}>Trusted by Farmers</h3>
+            <h3 className={styles.statsTitle}>{t.stats.title}</h3>
             
             <div className={styles.statsGrid}>
-              <div className={styles.statItem}>
-                <div className={styles.statNumber}>15K+</div>
-                <div className={styles.statLabel}>Active Users</div>
-              </div>
-              <div className={styles.statItem}>
-                <div className={styles.statNumber}>92%</div>
-                <div className={styles.statLabel}>Accuracy Rate</div>
-              </div>
-              <div className={styles.statItem}>
-                <div className={styles.statNumber}>50+</div>
-                <div className={styles.statLabel}>Crop Varieties</div>
-              </div>
-              <div className={styles.statItem}>
-                <div className={styles.statNumber}>24/7</div>
-                <div className={styles.statLabel}>Data Updates</div>
-              </div>
+              {t.stats.items.map((stat, index) => (
+                <div key={index} className={styles.statItem}>
+                  <div className={styles.statNumber}>{stat.value}</div>
+                  <div className={styles.statLabel}>{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -359,11 +358,26 @@ const AdvisoryForm = ({ farmer }) => {
       {/* Advisory Results */}
       {advisoryData && (
         <div className={styles.resultsSection}>
-          <AdvisoryResult data={advisoryData} />
+          <AdvisoryResult data={advisoryData} language={currentLang} />
         </div>
       )}
     </div>
   );
 };
+
+// Helper function for flag emojis
+function getFlagEmoji(langCode) {
+  const flags = {
+    'en': '🇺🇸', // English (US flag)
+    'hi': '🇮🇳', // Hindi (Indian flag)
+    'kn': '🇮🇳', // Kannada (Indian flag)
+    'bn': '🇧🇩', // Bengali (Bangladesh flag)
+    'ur': '🇵🇰', // Urdu (Pakistan flag)
+    'mr': '🇮🇳', // Marathi (Indian flag)
+    'ta': '🇮🇳', // Tamil (Indian flag)
+    'ml': '🇮🇳', // Malayalam (Indian flag)
+  };
+  return flags[langCode] || '🌐';
+}
 
 export default AdvisoryForm;
