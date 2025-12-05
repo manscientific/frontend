@@ -15,7 +15,7 @@ const CropAdvicePage = () => {
     potassium: "",
     ph: "",
     organic_carbon: "",
-    language: "English", // NEW FIELD
+    language: "English", // ✅ NEW FIELD
   });
 
   const [response, setResponse] = useState(null);
@@ -37,8 +37,9 @@ const CropAdvicePage = () => {
         potassium: Number(form.potassium),
         ph: Number(form.ph),
         organic_carbon: Number(form.organic_carbon),
-        language: form.language, // SEND LANGUAGE TO BACKEND
+        language: form.language, // ✅ SEND LANGUAGE TO BACKEND
       });
+
       setResponse(res.data);
     } catch (err) {
       alert("Error fetching AI advice");
