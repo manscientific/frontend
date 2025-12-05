@@ -582,8 +582,8 @@ const AdvisoryForm = ({ farmer }) => {
             
             <div className={styles.statsGrid}>
               <div className={styles.statItem}>
-                {/* <div className={styles.statNumber}>15K+</div>
-                <div className={styles.statLabel}>{t.activeUsers}</div> */}
+                {/* <div className={styles.statNumber}>15K+</div> */}
+                <div className={styles.statLabel}>{t.activeUsers}</div>
               </div>
               <div className={styles.statItem}>
                 <div className={styles.statNumber}>92%</div>
