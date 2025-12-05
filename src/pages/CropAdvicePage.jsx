@@ -14,8 +14,7 @@ const CropAdvicePage = () => {
     phosphorus: "",
     potassium: "",
     ph: "",
-    organic_carbon: "",
-    language: "English",
+    organic_carbon: ""
   });
 
   const [response, setResponse] = useState(null);
@@ -37,12 +36,9 @@ const CropAdvicePage = () => {
         potassium: Number(form.potassium),
         ph: Number(form.ph),
         organic_carbon: Number(form.organic_carbon),
-        language: form.language,
       });
-
       setResponse(res.data);
     } catch (err) {
-      console.log("Frontend Error:", err);  // 🔥 IMPORTANT FOR DEBUGGING
       alert("Error fetching AI advice");
     }
     setLoading(false);
@@ -51,20 +47,6 @@ const CropAdvicePage = () => {
   return (
     <div style={{ padding: "20px" }}>
       <h2>🌱 Soil + Input Advisory for {cropName}</h2>
-
-      <h3>🌐 Select Language</h3>
-      <select name="language" value={form.language} onChange={change}>
-        <option>English</option>
-        <option>Hindi</option>
-        <option>Punjabi</option>
-        <option>Tamil</option>
-        <option>Telugu</option>
-        <option>Marathi</option>
-        <option>Gujarati</option>
-        <option>Bengali</option>
-        <option>Kannada</option>
-        <option>Odia</option>
-      </select>
 
       <h3>🧪 Soil Test Report</h3>
 
