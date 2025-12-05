@@ -584,8 +584,8 @@ const AdvisoryForm = ({ farmer }) => {
               <div className={styles.statItem}>
                  <div className={styles.statNumber}>24/7</div>
                 <div className={styles.statLabel}>{t.dataUpdates}</div>
-                {/* <div className={styles.statNumber}>15K+</div> */}
-                <div className={styles.statLabel}>{t.activeUsers}</div>
+                {/* <div className={styles.statNumber}>15K+</div>
+                <div className={styles.statLabel}>{t.activeUsers}</div> */}
               </div>
               <div className={styles.statItem}>
                 <div className={styles.statNumber}>92%</div>
@@ -596,8 +596,8 @@ const AdvisoryForm = ({ farmer }) => {
                 <div className={styles.statLabel}>{t.cropVarieties}</div>
               </div>
               <div className={styles.statItem}>
-                 <div className={styles.statNumber}>--</div> 
-                <div className={styles.statLabel}>{t.activeUsers}</div>
+                * <div className={styles.statNumber}>3</div> 
+                <div className={styles.statLabel}>{t.languages}</div>
               </div>
             </div>
           </div>
