@@ -597,7 +597,7 @@ const AdvisoryForm = ({ farmer }) => {
               </div>
               <div className={styles.statItem}>
                 * <div className={styles.statNumber}>3</div> 
-                <div className={styles.statLabel}>{t.languages}</div>
+                <div className={styles.statLabel}>languages</div>
               </div>
             </div>
           </div>
