@@ -22,11 +22,12 @@ const CropAdvicePage = () => {
   const [loading, setLoading] = useState(false);
 
   const languages = [
-    "English", "Hindi", "Spanish", "French", "German", 
-    "Chinese", "Japanese", "Korean", "Arabic", "Portuguese",
-    "Russian", "Tamil", "Telugu", "Marathi", "Bengali",
-    "Gujarati", "Kannada", "Malayalam", "Punjabi", "Urdu"
-  ];
+  "English", "Hindi", "Tamil", "Telugu", "Marathi", 
+  "Bengali", "Gujarati", "Kannada", "Malayalam", 
+  "Punjabi", "Urdu", "Odia", "Assamese", "Sanskrit",
+  "Kashmiri", "Konkani", "Maithili", "Sindhi", "Nepali",
+  "Bhojpuri"
+];
 
   const change = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
