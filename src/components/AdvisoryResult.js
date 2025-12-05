@@ -553,16 +553,19 @@ const AdvisoryResult = ({ data, language = "en" }) => {
       )}
 
       {/* Action Buttons */}
-      <div className={styles.actionSection}>
-        <button className={styles.primaryAction}>
-          <FaSave />
-          <span>{t.saveThisAdvisory}</span>
-        </button>
-        <button className={styles.secondaryAction}>
-          <FaShareAlt />
-          <span>{t.shareWithFarmers}</span>
-        </button>
-      </div>
+      {/* 
+<div className={styles.actionSection}>
+  <button className={styles.primaryAction}>
+    <FaSave />
+    <span>{t.saveThisAdvisory}</span>
+  </button>
+  <button className={styles.secondaryAction}>
+    <FaShareAlt />
+    <span>{t.shareWithFarmers}</span>
+  </button>
+</div>
+*/}
+
     </div>
   );
 };
