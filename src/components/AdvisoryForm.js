@@ -596,7 +596,7 @@ const AdvisoryForm = ({ farmer }) => {
                 <div className={styles.statLabel}>{t.cropVarieties}</div>
               </div>
               <div className={styles.statItem}>
-                * <div className={styles.statNumber}>3</div> 
+                <div className={styles.statNumber}>3</div> 
                 <div className={styles.statLabel}>languages</div>
               </div>
             </div>
